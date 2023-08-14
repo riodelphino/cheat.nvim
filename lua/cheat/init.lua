@@ -49,6 +49,7 @@ local default_configs = {
 
 local configs = default_configs
 
+-- Update all config recursively
 local function update_configs(configs, user_configs)
    for k, v in pairs(user_configs) do
       if type(v) == "table" then
@@ -60,6 +61,7 @@ local function update_configs(configs, user_configs)
    end
 end
 
+-- Setup
 function M.setup(user_configs)
    --
    update_configs(configs, user_configs)
@@ -69,6 +71,7 @@ function M.setup(user_configs)
    defineCommands()
 end
 
+-- Toggle cheat sheet
 function M.toggle_cheat_sheet(cheat_name)
    local path
    if vim.b.cheatbuf ~= nil then   -- Close existing cheatsheet
@@ -93,6 +96,7 @@ function M.toggle_cheat_sheet(cheat_name)
    end
 end
 
+-- Open cheat sheet
 function M.open_cheat_sheet(path)
    -- local path = vim.fn.expand(configs.cheat_file)
 
@@ -115,6 +119,7 @@ function M.open_cheat_sheet(path)
    return buf
 end
 
+-- Open cheat sheet with floating window
 function M.open_cheat_sheet_float(path)
    local buf = vim.api.nvim_create_buf(false, true)
    local width = math.floor(vim.api.nvim_win_get_width(0) * configs.window.float.width.ratio)
@@ -151,7 +156,7 @@ function M.close_cheat_sheet(cheatbuf)
    vim.cmd("bd " .. cheatbuf)
 end
 
--- Return cheat name from filename
+-- Get the file-specific cheat_name from filename
 -- ex.) 'test.md' --> 'md'
 function M.getCheatName(filename)
    for name, patterns in pairs(configs.cheatsheets.filetypes) do
@@ -166,46 +171,28 @@ function M.getCheatName(filename)
    return nil
 end
 
-function M.getCheatPath(name)
+-- Get the path from cheat name
+function M.getCheatPath(cheat_name)
    local cf = configs.file
-   local filename = cf.prefix .. tostring(name) .. cf.ext
+   local filename = cf.prefix .. tostring(cheat_name) .. cf.ext
    local path = cf.dir .. "/" .. filename
    return path
 end
 
+-- Define keymaps
 function defineKeymaps()
    -- Keymaps
    local map = vim.keymap.set
    local opts = { silent = true, noremap = true }
 
-   -- -- Cheatsheet (by filetypes)
-   -- map({ "n" }, configs.keymaps.leader .. "h", ":lua require('cheat').toggle_cheat_sheet()<CR>", opts)
-
-   -- -- Cheatsheets (Common)
-   -- for name, item in pairs(configs.cheatsheets.commons) do
-   --    local leader = configs.keymaps.leader
-   --    local keymap = leader .. item.keymap
-   --    local cheat_file_path = M.getCheatPath(name)
-   --    local command = ':lua require("cheat").toggle_cheat_sheet("' .. cheat_file_path .. '")<CR>'
-   --    map({ "n", "v" }, keymap, command, opts)
-   -- end
-
    for keymap, command in pairs(configs.keymaps) do
-      -- ["<leader>ch"] = require("cheat").toggle_cheat_sheet(),
-      -- ["<leader>cn"] = require("cheat").toggle_cheat_sheet("nvim"),
-      -- ["<leader>ct"] = require("cheat").toggle_cheat_sheet("tmux"),
-      -- ["<leader>ch"] = ":Cheat<cr>",
-      -- ["<leader>cn"] = ":Cheat nvim<cr>",
-      -- ["<leader>ct"] = ":Cheat tmux<cr>",
       map({ "n", "v" }, keymap, command, opts)
    end
 end
 
 -- Define commands
-function defineCommands()
-   -- | Define Cheat command |
-   vim.cmd([[command! -nargs=? -complete=command Cheat lua require('cheat').toggle_cheat_sheet(<q-args>)]])
-end
+function defineCommands() vim.cmd(
+   [[command! -nargs=? -complete=command Cheat lua require('cheat').toggle_cheat_sheet(<q-args>)]]) end
 
 -- print("init.lua end")
 

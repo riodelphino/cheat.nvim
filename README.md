@@ -6,16 +6,29 @@ Quick & Usefull cheatsheet viewer plugin for nvim.
 Inspired by [vim-cheatsheet](https://github.com/reireias/vim-cheatsheet)
 
 
+## Preview
+
+### Show cheatsheets by user commands.
+`:Cheat` or `:Cheat {cheat_name}`
+
+https://github.com/riodelphino/cheat.nvim/assets/29378271/894b3c85-ddf0-49d1-b558-cb2e9f51948e
+
+### Show cheatsheets by keymaps.
+`<leader>ch` or `<leader>cn` or `<leader>ct`
+
+https://github.com/riodelphino/cheat.nvim/assets/29378271/e6f044f1-fad1-4f7a-8283-8fe481c54366
+
+
 ## Functions
 
 Both functions are available.
 
-1. Show 'file-specific' cheatsheet, with the same one keymap.  
-ex.) \<leader\>ch
+1. Show 'filetype-specific' cheatsheet automatically, with the same 'one' keymap.  
+   ex.) `<leader>ch` or `:Cheat`
 
-2. Show 'commonly-used' cheatsheet, by each keymaps.  
-ex.) \<leader\>ct --> tmux's cheatsheet  
-ex.) \<leader\>cn --> nvim's cheatsheet
+1. Show 'commonly-used' cheatsheet, by each keymaps.  
+   ex.) `<leader>cn` or `:Cheat nvim` --> nvim's cheatsheet  
+   ex.) `<leader>ct` or `:Cheat tmux` --> tmux's cheatsheet  
 
 
 ## Install
@@ -34,12 +47,13 @@ require('cheat').setup {}
 
 ## Usage
 
-| Command      | Description                                                                                   |
-|--------------|-----------------------------------------------------------------------------------------------|
-| :Cheat       | Show the cheatsheet depending on filetype, with the style set in config.window.default_style. |
-| :CheatFloat  | (Unimplemented) Show the cheatsheet depending on filetypes as float style.                    |
-| :CheatHSplit | (Unimplemented) Show the cheatsheet depending on filetypes as horizontal split style.         |
-| :CheatVSplit | (Unimplemented) Show the cheatsheet depending on filetypes as vertical split style.           |
+| Command             | Description                                                                                                    |
+|---------------------|----------------------------------------------------------------------------------------------------------------|
+| :Cheat              | Show the cheatsheet depending on current buf's filetype,<br>with the style set in config.window.default_style. |
+| :CheatFloat         | (Unimplemented) Same with :Cheat, but with float style.                                                        |
+| :CheatHSplit        | (Unimplemented) Same with :Cheat, but with horizontal split style.                                             |
+| :CheatVSplit        | (Unimplemented) Same with :Cheat, but with vertical split style.                                               |
+| :Cheat {cheat_name} | Same with :Cheat, but show the specific cheatsheet.                                                            |
 
 
 ## Default keymaps
@@ -81,6 +95,7 @@ rquire('cheat').setup {
       ["<leader>ch"] = ":Cheat", -- Show the cheatsheet depending on filetype.
       ["<leader>cn"] = ":Cheat nvim", -- Show "cheat-nvim.md"
       ["<leader>ct"] = ":Cheat tmux", -- Show "cheat-tmux.md"
+      -- You can add more keymaps & cheatsheets here.
    },
    cheatsheets = {
       filetypes = { -- Open the specific cheatsheet by file pattern.
@@ -90,7 +105,8 @@ rquire('cheat').setup {
          css = { "*.css", "*.scss", "*.sass" },  -- Multiple filetypes are allowed.
          md = { "*.md" },
          php = { "*.php" },
-         html = { "*.html" },  -- You can add more filetypes settings.
+         html = { "*.html" },
+         -- You can add more filetypes settings here.
       },
    },
 }
