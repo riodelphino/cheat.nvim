@@ -26,10 +26,30 @@ use { "riodelphino/cheat.nvim" }
 ```
 
 
-## Usage
+## Setup
 ```lua
 require('cheat').setup {}
 ```
+
+
+## Usage
+
+| Command      | Description                                                                                   |
+|--------------|-----------------------------------------------------------------------------------------------|
+| :Cheat       | Show the cheatsheet depending on filetype, with the style set in config.window.default_style. |
+| :CheatFloat  | (Unimplemented) Show the cheatsheet depending on filetypes as float style.                    |
+| :CheatHSplit | (Unimplemented) Show the cheatsheet depending on filetypes as horizontal split style.         |
+| :CheatVSplit | (Unimplemented) Show the cheatsheet depending on filetypes as vertical split style.           |
+
+
+## Default keymaps
+
+| Keymap       | Function                                          |
+|--------------|---------------------------------------------------|
+| \<leader\>ch | Show the cheatsheet by current buf's file pattern |
+| \<leader\>cn | Show the nvim's cheatsheet (cheat-nvim.md)        |
+| \<leader\>ct | Show the tmux's cheatsheet (cheat-tmux.md)        |
+| q            | Close cheatsheet.                                 |
 
 
 ## Config
@@ -39,7 +59,7 @@ Default configs.
 rquire('cheat').setup {
    debug = false,  -- show debug msg
    window = {
-      type = "float",     -- "vsplit", "hsplit" -- Choise display style.
+      default_style = "float",     -- "vsplit", "hsplit" -- Choise display style.
       vsplit = { height = { size = 20 } },
       hsplit = { width = { size = 40 } },
       float = {
@@ -58,14 +78,11 @@ rquire('cheat').setup {
       ext = ".md", -- Cheatsheet extension.
    },
    keymaps = {
-      leader = "<Leader>c",
-      default = "h", -- Open the 'by filetypes' cheatsheet.
+      ["<leader>ch"] = ":Cheat", -- Show the cheatsheet depending on filetype.
+      ["<leader>cn"] = ":Cheat nvim", -- Show "cheat-nvim.md"
+      ["<leader>ct"] = ":Cheat tmux", -- Show "cheat-tmux.md"
    },
    cheatsheets = {
-      commons = { -- Open commonly used cheatsheets, if you are opening any filetype of buf.
-         nvim = { keymap = "n" },
-         tmux = { keymap = "t" }, -- You can add more settings.
-      },
       filetypes = { -- Open the specific cheatsheet by file pattern.
          lua = { "*.lua" },
          vim = { "*.vim", "*.vifmrc" }, -- The key 'vim' is the surfix of filename. ex.) cheat-vim.md
@@ -81,29 +98,13 @@ rquire('cheat').setup {
 ```
 
 
-## Default keymaps
-
-| Keymap       | Function                                                |
-|--------------|---------------------------------------------------------|
-| \<leader\>ch | Show the cheatsheet by current buf's file pattern       |
-| \<leader\>cn | Show the nvim's cheatsheet (cheat-nvim.md)              |
-| \<leader\>ct | Show the tmux's cheatsheet (cheat-tmux.md)              |
-| q            | Close cheatsheet. (Sorry, it doesn't work as expected.) |
-
-
 ## TODO
 
-- [ ] window.type = "vsplit"
-- [ ] window.type = "hsplit"
+- [ ] window.default_style = "vsplit"
+- [ ] window.default_style = "hsplit"
 - [ ] window.vsplit.signcolumn
 - [ ] window.vsplit.signcolumn
-- [ ] Logging (now just use print()...)
-
-
-## Disclaimer
-
-I'm an amateur with little experience about nvim plugins, so please forgive me if the source is dirty.  
-I want to refurbish them to separated modules...
+- [ ] Logging (now just print()...)
 
 
 ## Lisence

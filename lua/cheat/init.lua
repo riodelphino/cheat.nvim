@@ -11,7 +11,7 @@ fn = require("cheat.functions")
 local default_configs = {
    debug = true,
    window = {
-      type = "float",     -- "vsplit", "hsplit"
+      default_style = "float",     -- (Unimplemented) "vsplit", "hsplit"
       vsplit = { height = { size = 20 } },
       hsplit = { width = { size = 40 } },
       float = {
@@ -29,20 +29,12 @@ local default_configs = {
       prefix = "cheat-",
       ext = ".md",
    },
-   -- keymaps = {
-   --    leader = "<Leader>c",
-   --    default = "h",
-   -- },
    keymaps = {
-      ["<leader>ch"] = require("cheat").toggle_cheat_sheet(),
-      ["<leader>cn"] = require("cheat").toggle_cheat_sheet("nvim"),
-      ["<leader>ct"] = require("cheat").toggle_cheat_sheet("tmux"),
+      ["<leader>ch"] = ":Cheat",
+      ["<leader>cn"] = ":Cheat nvim",
+      ["<leader>ct"] = ":Cheat tmux",
    },
    cheatsheets = {
-      -- commons = {
-      --    nvim = { keymap = "n" },
-      --    tmux = { keymap = "t" },
-      -- },
       filetypes = {
          lua = { "*.lua" },
          vim = { "*.vim", "*.vifmrc" },
@@ -77,19 +69,21 @@ function M.setup(user_configs)
    defineCommands()
 end
 
-function M.toggle_cheat_sheet(path)
+function M.toggle_cheat_sheet(cheat_name)
+   local path
    if vim.b.cheatbuf ~= nil then   -- Close existing cheatsheet
       M.close_cheat_sheet(vim.b.cheatbuf)
       vim.b.cheatbuf = nil
-   else                                     -- Open cheatsheet
-      fn.print(tostring(path))
-      if path == "" or path == nil then     -- No path
+   else                                                 -- Open cheatsheet
+      fn.print("cheat_name: " .. tostring(cheat_name))
+      if cheat_name == "" or cheat_name == nil then     -- If no cheat_name was set, show cheat by filetypes.
          local filename = vim.fn.bufname("%")
          cheat_name = M.getCheatName(filename)
          path = M.getCheatPath(cheat_name)
-         fn.print(tostring(cheat_name))
+      else     -- If cheat_name was set.
+         path = M.getCheatPath(cheat_name)
       end
-      fn.print(tostring(path))
+      fn.print("path: " .. tostring(path))
       local type = configs.window.type
       if type == "vsplit" or type == "hsplit" then
          vim.b.cheatbuf = M.open_cheat_sheet(path)
@@ -157,6 +151,8 @@ function M.close_cheat_sheet(cheatbuf)
    vim.cmd("bd " .. cheatbuf)
 end
 
+-- Return cheat name from filename
+-- ex.) 'test.md' --> 'md'
 function M.getCheatName(filename)
    for name, patterns in pairs(configs.cheatsheets.filetypes) do
       for _, pattern in ipairs(patterns) do
@@ -172,37 +168,36 @@ end
 
 function M.getCheatPath(name)
    local cf = configs.file
-   local filename = cf.prefix .. name .. cf.ext
+   local filename = cf.prefix .. tostring(name) .. cf.ext
    local path = cf.dir .. "/" .. filename
    return path
 end
 
 function defineKeymaps()
    -- Keymaps
-   local keymap = vim.keymap.set
+   local map = vim.keymap.set
    local opts = { silent = true, noremap = true }
 
    -- -- Cheatsheet (by filetypes)
-   -- keymap({ "n" }, configs.keymaps.leader .. "h", ":lua require('cheat').toggle_cheat_sheet()<CR>", opts)
+   -- map({ "n" }, configs.keymaps.leader .. "h", ":lua require('cheat').toggle_cheat_sheet()<CR>", opts)
 
    -- -- Cheatsheets (Common)
    -- for name, item in pairs(configs.cheatsheets.commons) do
    --    local leader = configs.keymaps.leader
-   --    local map = leader .. item.keymap
+   --    local keymap = leader .. item.keymap
    --    local cheat_file_path = M.getCheatPath(name)
    --    local command = ':lua require("cheat").toggle_cheat_sheet("' .. cheat_file_path .. '")<CR>'
-   --    keymap({ "n", "v" }, map, command, opts)
+   --    map({ "n", "v" }, keymap, command, opts)
    -- end
 
-   for maps, command in pairs(configs.keymaps) do
-      -- keymaps = {
-      --    ["<leader>ch"] = require("cheat").toggle_cheat_sheet(),
-      --    ["<leader>cn"] = require("cheat").toggle_cheat_sheet("nvim"),
-      --    ["<leader>ct"] = require("cheat").toggle_cheat_sheet("tmux"),
-      -- },
-      for map in maps do
-         keymap({ "n", "v" }, map, command, opts)
-      end
+   for keymap, command in pairs(configs.keymaps) do
+      -- ["<leader>ch"] = require("cheat").toggle_cheat_sheet(),
+      -- ["<leader>cn"] = require("cheat").toggle_cheat_sheet("nvim"),
+      -- ["<leader>ct"] = require("cheat").toggle_cheat_sheet("tmux"),
+      -- ["<leader>ch"] = ":Cheat<cr>",
+      -- ["<leader>cn"] = ":Cheat nvim<cr>",
+      -- ["<leader>ct"] = ":Cheat tmux<cr>",
+      map({ "n", "v" }, keymap, command, opts)
    end
 end
 
