@@ -6,7 +6,7 @@ Quick & Usefull cheatsheet viewer plugin for nvim.
 Inspired by [vim-cheatsheet](https://github.com/reireias/vim-cheatsheet)
 
 
-## Preview
+## Showcase
 
 ### Show cheatsheets by user commands.
 `:Cheat` or `:Cheat {cheat_name}`
@@ -48,18 +48,18 @@ require('cheat').setup {}
 ## Usage
 
 | Command             | Description                                                                                                    |
-|---------------------|----------------------------------------------------------------------------------------------------------------|
+| ------------------- | -------------------------------------------------------------------------------------------------------------- |
 | :Cheat              | Show the cheatsheet depending on current buf's filetype,<br>with the style set in config.window.default_style. |
-| :CheatFloat         | (Unimplemented) Same with :Cheat, but with float style.                                                        |
-| :CheatHSplit        | (Unimplemented) Same with :Cheat, but with horizontal split style.                                             |
-| :CheatVSplit        | (Unimplemented) Same with :Cheat, but with vertical split style.                                               |
 | :Cheat {cheat_name} | Same with :Cheat, but show the specific cheatsheet.                                                            |
+| ~~:CheatFloat~~     | (Unimplemented) Same with :Cheat, but with float style.                                                        |
+| ~~:CheatHSplit~~    | (Unimplemented) Same with :Cheat, but with horizontal split style.                                             |
+| ~~:CheatVSplit~~    | (Unimplemented) Same with :Cheat, but with vertical split style.                                               |
 
 
 ## Default keymaps
 
 | Keymap       | Function                                          |
-|--------------|---------------------------------------------------|
+| ------------ | ------------------------------------------------- |
 | \<leader\>ch | Show the cheatsheet by current buf's file pattern |
 | \<leader\>cn | Show the nvim's cheatsheet (cheat-nvim.md)        |
 | \<leader\>ct | Show the tmux's cheatsheet (cheat-tmux.md)        |
@@ -71,7 +71,8 @@ require('cheat').setup {}
 Default configs.
 ```lua
 rquire('cheat').setup {
-   debug = false,  -- show debug msg
+   debug = false, -- show debug msg
+   readonly = true, -- (true) Use "view" command / (false) Use "edit" command, to open cheatsheet.
    window = {
       default_style = "float",     -- "vsplit", "hsplit" -- Choise display style.
       vsplit = { height = { size = 20 } },
@@ -95,7 +96,7 @@ rquire('cheat').setup {
       ["<leader>ch"] = ":Cheat", -- Show the cheatsheet depending on filetype.
       ["<leader>cn"] = ":Cheat nvim", -- Show "cheat-nvim.md"
       ["<leader>ct"] = ":Cheat tmux", -- Show "cheat-tmux.md"
-      -- You can add more keymaps & cheatsheets here.
+      -- Add more keymaps & cheatsheets here.
    },
    cheatsheets = {
       filetypes = { -- Open the specific cheatsheet by file pattern.
@@ -106,7 +107,7 @@ rquire('cheat').setup {
          md = { "*.md" },
          php = { "*.php" },
          html = { "*.html" },
-         -- You can add more filetypes settings here.
+         -- Add more filetypes settings here.
       },
    },
 }

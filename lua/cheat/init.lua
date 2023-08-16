@@ -10,8 +10,9 @@ fn = require("cheat.functions")
 -- Default configuration
 local default_configs = {
    debug = true,
+   readonly = true,
    window = {
-      default_style = "float",     -- (Unimplemented) "vsplit", "hsplit"
+      default_style = "float", -- (Unimplemented) "vsplit", "hsplit"
       vsplit = { height = { size = 20 } },
       hsplit = { width = { size = 40 } },
       float = {
@@ -74,16 +75,16 @@ end
 -- Toggle cheat sheet
 function M.toggle_cheat_sheet(cheat_name)
    local path
-   if vim.b.cheatbuf ~= nil then   -- Close existing cheatsheet
+   if vim.b.cheatbuf ~= nil then -- Close existing cheatsheet
       M.close_cheat_sheet(vim.b.cheatbuf)
       vim.b.cheatbuf = nil
-   else                                                 -- Open cheatsheet
+   else                                             -- Open cheatsheet
       fn.print("cheat_name: " .. tostring(cheat_name))
-      if cheat_name == "" or cheat_name == nil then     -- If no cheat_name was set, show cheat by filetypes.
+      if cheat_name == "" or cheat_name == nil then -- If no cheat_name was set, show cheat by filetypes.
          local filename = vim.fn.bufname("%")
          cheat_name = M.getCheatName(filename)
          path = M.getCheatPath(cheat_name)
-      else     -- If cheat_name was set.
+      else -- If cheat_name was set.
          path = M.getCheatPath(cheat_name)
       end
       fn.print("path: " .. tostring(path))
@@ -113,7 +114,9 @@ function M.open_cheat_sheet(path)
       split_command = ":sp"
    end
    vim.cmd(split_command)
-   vim.cmd("view " .. path)
+
+   local open_cmd = configs.readonly and "view " or "edit "
+   vim.cmd(open_cmd .. path)
    fn.print("vim.fn.bufnr('%'): " .. tostring(vim.fn.bufnr("%")), configs.debug)
    buf = vim.fn.bufnr("%")
    return buf
@@ -121,7 +124,7 @@ end
 
 -- Open cheat sheet with floating window
 function M.open_cheat_sheet_float(path)
-   local buf = vim.api.nvim_create_buf(false, true)
+   local buf = vim.api.nvim_create_buf(false, configs.readonly)
    local width = math.floor(vim.api.nvim_win_get_width(0) * configs.window.float.width.ratio)
    local height = math.floor(vim.api.nvim_win_get_height(0) * configs.window.float.height.ratio)
    local focusable = true
@@ -140,8 +143,9 @@ function M.open_cheat_sheet_float(path)
    local winid = vim.api.nvim_open_win(buf, true, opts)
    local signcolumn = configs.window.float.signcolumn and "yes" or "no"
    vim.api.nvim_win_set_option(winid, "signcolumn", signcolumn)
-   vim.cmd("view " .. path)
-   buf = vim.fn.bufnr("%")   -- the 'buf' variable might point wrong bufnr in re-opened file.
+   local open_cmd = configs.readonly and "view " or "edit "
+   vim.cmd(open_cmd .. path)
+   buf = vim.fn.bufnr("%") -- the 'buf' variable might point wrong bufnr in re-opened file.
    local command = ':lua require("cheat").close_cheat_sheet(' .. tostring(buf) .. ")<CR>"
    vim.api.nvim_buf_set_keymap(buf, "n", "q", command, { noremap = true, silent = true })
    fn.print(command, configs.debug)
