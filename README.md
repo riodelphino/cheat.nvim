@@ -47,23 +47,23 @@ require('cheat').setup {}
 
 ## Usage
 
-| Command             | Description                                                                                                    |
-| ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| :Cheat              | Show the cheatsheet depending on current buf's filetype,<br>with the style set in config.window.default_style. |
-| :Cheat {cheat_name} | Same with :Cheat, but show the specific cheatsheet.                                                            |
-| ~~:CheatFloat~~     | (Unimplemented) Same with :Cheat, but with float style.                                                        |
-| ~~:CheatHSplit~~    | (Unimplemented) Same with :Cheat, but with horizontal split style.                                             |
-| ~~:CheatVSplit~~    | (Unimplemented) Same with :Cheat, but with vertical split style.                                               |
+| Command               | Description                                                                                                    |
+| -------------------   | -------------------------------------------------------------------------------------------------------------- |
+| `:Cheat`              | Show the cheatsheet depending on current buf's filetype,<br>with the style set in config.window.default_style. |
+| `:Cheat {cheat_name}` | Same with `:Cheat`, but show the specific cheatsheet.                                                          |
+| ~~`:CheatFloat`~~     | Same with `:Cheat`, but with float style. (Sorry, not implemented now.)                                        |
+| ~~`:CheatHSplit`~~    | Same with `:Cheat`, but with horizontal split style. (Sorry, not implemented now.)                             |
+| ~~`:CheatVSplit`~~    | Same with `:Cheat`, but with vertical split style. (Sorry, not implemented now.)                               |
 
 
 ## Default keymaps
 
-| Keymap       | Function                                          |
-| ------------ | ------------------------------------------------- |
-| \<leader\>ch | Show the cheatsheet by current buf's file pattern |
-| \<leader\>cn | Show the nvim's cheatsheet (cheat-nvim.md)        |
-| \<leader\>ct | Show the tmux's cheatsheet (cheat-tmux.md)        |
-| q            | Close cheatsheet.                                 |
+| Keymap       | Function                                                      |
+| ------------ | ------------------------------------------------------------- |
+| `<leader>ch` | Show the cheatsheet delepending on current buf's file pattern |
+| `<leader>cn` | Show the nvim's cheatsheet (cheat-nvim.md)                    |
+| `<leader>ct` | Show the tmux's cheatsheet (cheat-tmux.md)                    |
+| `q`          | Close cheatsheet.                                             |
 
 
 ## Config
@@ -71,10 +71,10 @@ require('cheat').setup {}
 Default configs.
 ```lua
 rquire('cheat').setup {
-   debug = false, -- show debug msg
-   readonly = true, -- (true) Use "view" command / (false) Use "edit" command, to open cheatsheet.
+   debug = false, -- show debug msg (just for me)
+   readonly = true, -- 'false' for editable.
    window = {
-      default_style = "float",     -- "vsplit", "hsplit" -- Choise display style.
+      default_style = "float",     -- "vsplit", "hsplit" -- Choose display style. (Now only 'float' works.)
       vsplit = { height = { size = 20 } },
       hsplit = { width = { size = 40 } },
       float = {
