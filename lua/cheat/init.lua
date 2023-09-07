@@ -147,7 +147,7 @@ function M.open_cheat_sheet_float(path)
    vim.cmd(open_cmd .. path)
    buf = vim.fn.bufnr("%") -- the 'buf' variable might point wrong bufnr in re-opened file.
    local command = ':lua require("cheat").close_cheat_sheet(' .. tostring(buf) .. ")<CR>"
-   vim.api.nvim_buf_set_keymap(buf, "n", "q", command, { noremap = true, silent = true })
+   vim.api.nvim_buf_set_keymap(buf, "n", "q", command, { noremap = true, silent = true, buffer = true })
    fn.print(command, configs.debug)
    fn.print("vim.fn.bufnr(%): " .. tostring(vim.fn.bufnr("%")), configs.debug)
    return buf
