@@ -2,13 +2,14 @@
 local M = {}
 
 -- Print tables as string & recursively
-print_table = function(t, degug, indent)
+function M.print_table(t, indent)
+   local debug = require('cheat.options').opts.debug
    if debug then
       indent = indent or "  "
       for k, v in pairs(t) do
          if type(v) == "table" then
             print(indent .. k .. " :")
-            print_table(v, indent .. "  ")
+            M.print_table(v, indent .. "  ")
          else
             print(indent .. k .. " : " .. tostring(v))
          end
@@ -16,12 +17,13 @@ print_table = function(t, degug, indent)
    end
 end
 
-local print = function(msg, debug)
+function M.print(msg)
+   local debug = require('cheat.options').opts.debug
    if debug then print(msg) end
 end
 
 -- Return splited args
-local split_args = function(args)
+function M.split_args(args)
    -- Args is "arg1" "arg2" "arg3" style string.
    local args_list
    if args == "" then   -- If no args was given, args == ""
@@ -34,19 +36,42 @@ local split_args = function(args)
 end
 
 -- Convert Bash pattern to Lua pattern
-local bashPatternToLua = function(pattern)
+function M.bashPatternToLua(pattern)
    --
    return pattern:gsub("%.", "%%."):gsub("%*", ".*")
 end
 
-local M = {
-   print = print,
-   print_table = print_table,
-   split_args = split_args,
-   bashPatternToLua = bashPatternToLua,
-   test = "aiueoaiueo",
-}
+function M.is_array(table)
+   local is_array_flg = true
+   for k, v in pairs(table) do
+      if type(k) ~= 'number' or type(v) ~= 'string' then
+         is_array_flg = false
+         break
+      end
+   end
+   return is_array_flg
+end
 
--- print("functions.lua end")
+function M.deep_merge(default, user)
+   -- If `user` is not a table, use the `default` value
+   if type(user) ~= 'table' then return default end
+
+   -- Iterate through all keys in the default table
+   for key, default_value in pairs(default) do
+      if user[key] == nil then
+         -- If the key is missing in the user table, use the default value
+         user[key] = default_value
+      elseif type(default_value) == 'table' then
+         if M.is_array(default[key]) then -- If the value is a array, just overwrite all by user
+            user[key] = user[key]
+         else
+            -- If the value is a table, recurse
+            user[key] = M.deep_merge(default_value, user[key])
+         end
+      end
+   end
+   return user
+end
+
 
 return M
