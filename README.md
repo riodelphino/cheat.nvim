@@ -7,15 +7,16 @@ Inspired by [vim-cheatsheet](https://github.com/reireias/vim-cheatsheet)
 
 > [!Warning]
 > Critical changes in ver1.1.0
-> - Modified options
-> - Change default dir from '~/.config/nvim/cheat' to '~/.config/cheat'
-> - Remove file prefix
+> - Modified options totally
+> - Changed default dir from `~/.config/nvim/cheat` to `~/.config/cheat`
+> - Removed file prefix
 
 See [## Default options](#default-options), and copy & paste to your settings.
 
 
 > [!Note]
-> Hsplit & Vsplit are implemented ! (v1.1.0)
+> Hsplit & Vsplit are implemented ! (v1.1.0~)
+> (with `:Cheat {cheat-name} {float|hsplit|vsplit}`)
 
 
 ## Install

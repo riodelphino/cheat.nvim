@@ -27,6 +27,7 @@ function M.toggle_cheat_sheet(cheat_name, win_type)
    if vim.b.cheatbuf ~= nil then -- Close existing cheatsheet
       M.close_cheat_sheet(vim.b.cheatbuf)
       vim.b.cheatbuf = nil
+      return
    else -- Open cheatsheet
       fn.print('cheat_name: ' .. tostring(cheat_name))
       if cheat_name == '' or cheat_name == nil then -- If no cheat_name was set, show cheat by filetypes.
@@ -43,6 +44,7 @@ function M.toggle_cheat_sheet(cheat_name, win_type)
       elseif win_type == 'float' then
          vim.b.cheatbuf = M.open_cheat_sheet_float(path)
       end
+      return
    end
 end
 
