@@ -1,6 +1,81 @@
 
 # cheat.nvim
 
+
+> [!Caution]
+> This project was deprecated.
+> The same functionality can be achieved using picker in [snacks.nvim](https://github.com/folke/snacks.nvim) easier.
+
+lazy.nvim:
+```lua
+return {
+   'folke/snacks.nvim',
+   opts = {},
+   config = function()
+      require('snacks').setup({
+      })
+
+      local cheat_files = {
+         { path = cheat_dir .. 'sh.md', label = 'sh' },
+         { path = cheat_dir .. 'git.md', label = 'git' },
+         { path = cheat_dir .. 'nvim.md', label = 'nvim' },
+         { path = cheat_dir .. 'tmux.md', label = 'tmux' },
+         { path = cheat_dir .. 'yazi.md', label = 'yazi' },
+         { path = cheat_dir .. 'taskwarrior.md', label = 'taskwarrior' },
+         { path = cheat_dir .. 'macos_app.md', label = 'MacOS App' },
+      }
+   
+      local base_opts = {
+         style = 'float',
+         focusable = true,
+         width = 0.85,
+         height = 0.85,
+         position = 'float',
+         border = 'rounded',
+         enter = true,
+         relative = 'editor',
+         zindex = 50,
+         buf = {
+            buflisted = true,
+            modifiable = true,
+         },
+         wo = {
+            list = true,
+            spell = false,
+            wrap = false,
+            number = true,
+            signcolumn = 'yes',
+            conceallevel = 3,
+            cursorline = true,
+         },
+         keys = {
+            q = 'close',
+         },
+      }
+   
+      local notify_opts = {
+         title = 'Snacks',
+      }
+   
+      function snacks_cheat_picker()
+         vim.ui.select(cheat_files, {
+            prompt = 'Cheat picker',
+            format_item = function(item) return item.label end,
+         }, function(choice)
+            if choice then
+               local opts = vim.deepcopy(base_opts)
+               opts.file = choice.path
+               Snacks.win(opts)
+            end
+         end)
+      end
+   end,
+   keys = {
+      { '<leader>Sc', function() snacks_cheat_picker() end, desc = 'Cheat picker' },
+   }
+}
+```
+
 Quick & Usefull cheatsheet viewer plugin for nvim.
 
 Inspired by [vim-cheatsheet](https://github.com/reireias/vim-cheatsheet)
